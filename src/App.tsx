@@ -1,8 +1,3 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Home from './pages/home';
-import Login from './pages/login';
-import ForgotPassword from './pages/forgotPassword';
-import ResetPassword from './pages/resetPassword';
 import Notfound from './pages/notfound';
 import Dashboard from './pages/Dashboard';
 import UserManagement from './pages/userManagement';
@@ -14,6 +9,7 @@ import VisitasManagement from './pages/visitasManagement';
 import DisponibilidadeManagement from './pages/disponibilidadeManagement';
 import Notifications from './pages/Notifications';
 import TechnicianManagement from './pages/technicianManagement';
+import React, { JSX } from 'react';
 
 // Componente de proteção para rotas privadas
 const PrivateRoute = ({ children }: { children: JSX.Element }) => {
@@ -28,7 +24,7 @@ const AppRoutes = () => (
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        
+
         {/* Rotas Privadas */}
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/user-management" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
@@ -39,7 +35,9 @@ const AppRoutes = () => (
         <Route path="/visitas" element={<PrivateRoute><VisitasManagement /></PrivateRoute>} />
         <Route path="/disponibilidade" element={<PrivateRoute><DisponibilidadeManagement /></PrivateRoute>} />
         <Route path="/notificacoes" element={<PrivateRoute><Notifications /></PrivateRoute>} />
-        <Route path="/technician-management" element={<PrivateRoute><TechnicianManagement /></PrivateRoute>} />
+        <Route path="/technician-management" element={<PrivateRoute><TechnicianManagement onClose={function (): void {
+            throw new Error('Function not implemented.');
+        }} /></PrivateRoute>} />
 
         {/* Rota Padrão para Página Não Encontrada */}
         <Route path="*" element={<Notfound />} />
