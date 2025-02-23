@@ -1,10 +1,10 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/home';
 import Login from './pages/login';
 import ForgotPassword from './pages/forgotPassword';
-import Notfound from './pages/notfound';
 import ResetPassword from './pages/resetPassword';
+import Notfound from './pages/notfound';
+import Dashboard from './pages/Dashboard';
 import UserManagement from './pages/userManagement';
 import Agricultores from './pages/agricultores';
 import AgricultorForm from './pages/agricultorForm';
@@ -14,34 +14,38 @@ import VisitasManagement from './pages/visitasManagement';
 import DisponibilidadeManagement from './pages/disponibilidadeManagement';
 import Notifications from './pages/Notifications';
 import TechnicianManagement from './pages/technicianManagement';
-import Dashboard from "./pages/Dashboard";
 
-function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/Login" element={<Login />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path='/ForgotPassword' element={<ForgotPassword />} />
-                <Route path='*' element={<Notfound />} />
-                <Route path='/ResetPassword' element={<ResetPassword />} />
-                <Route path='/UserMaganement' element={<UserManagement />} />
-                <Route path="/agricultores" element={<Agricultores />} />
-                <Route path="/agricultores/novo" element={<AgricultorForm />} />
-                <Route path="/recursos" element={<ResourceManagement />} />
-                <Route path="/servicos" element={<ServiceManagement />} />
-                <Route path="/visitas" element={<VisitasManagement />} />
-                <Route path='disponibilidade' element={<DisponibilidadeManagement />} />
-                <Route path="/notificacoes" element={<Notifications />} />
-                <Route path="/technicianManagement" element={<TechnicianManagement onClose={function (): void {
-                    throw new Error('Function not implemented.');
-                }} />} />
-            </Routes>
-        </Router>
-    );
-}
+// Componente de proteção para rotas privadas
+const PrivateRoute = ({ children }: { children: JSX.Element }) => {
+    const isAuthenticated = !!localStorage.getItem("token"); // Simulação de autenticação
+    return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
-export default App;
+const AppRoutes = () => (
+    <Routes>
+        {/* Rotas Públicas */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        
+        {/* Rotas Privadas */}
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/user-management" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
+        <Route path="/agricultores" element={<PrivateRoute><Agricultores /></PrivateRoute>} />
+        <Route path="/agricultores/novo" element={<PrivateRoute><AgricultorForm /></PrivateRoute>} />
+        <Route path="/recursos" element={<PrivateRoute><ResourceManagement /></PrivateRoute>} />
+        <Route path="/servicos" element={<PrivateRoute><ServiceManagement /></PrivateRoute>} />
+        <Route path="/visitas" element={<PrivateRoute><VisitasManagement /></PrivateRoute>} />
+        <Route path="/disponibilidade" element={<PrivateRoute><DisponibilidadeManagement /></PrivateRoute>} />
+        <Route path="/notificacoes" element={<PrivateRoute><Notifications /></PrivateRoute>} />
+        <Route path="/technician-management" element={<PrivateRoute><TechnicianManagement /></PrivateRoute>} />
+
+        {/* Rota Padrão para Página Não Encontrada */}
+        <Route path="*" element={<Notfound />} />
+    </Routes>
+);
+
+export default AppRoutes;
 
 
